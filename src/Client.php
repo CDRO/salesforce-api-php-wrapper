@@ -137,7 +137,7 @@ class Client
      * Create a new object in salesforce
      *
      * @param string $object
-     * @param string $data
+     * @param array|object $data
      * @return bool
      * @throws \Exception
      */
@@ -169,6 +169,31 @@ class Client
         $this->makeRequest('delete', $url, ['headers' => ['Authorization' => $this->getAuthHeader()]]);
 
         return true;
+    }
+
+    /**
+     * Login with user and password
+     *
+     * @param $username
+     * @param $password
+     * @return array|mixed
+     * @throws \Exception
+     */
+    public function login($username, $password)
+    {
+        $url = $this->salesforceLoginUrl . 'services/oauth2/token';
+
+        $post_data = [
+            'grant_type'    => 'password',
+            'client_id'     => $this->clientId,
+            'client_secret' => $this->clientSecret,
+            'username'      => $username,
+            'password'      => $password
+        ];
+
+        $response = $this->makeRequest('post', $url, ['form_params' => $post_data]);
+
+        return json_decode($response->getBody(), true);
     }
 
     /**

@@ -138,7 +138,7 @@ class Client
      *
      * @param string $object
      * @param array|object $data
-     * @return bool
+     * @return string The id of the newly created record
      * @throws \Exception
      */
     public function createRecord($object, $data)
@@ -157,8 +157,8 @@ class Client
     /**
      * Delete an object with th specified id
      *
-     * @param $object
-     * @param $id
+     * @param string $object
+     * @param string $id
      * @return bool
      * @throws \Exception
      */

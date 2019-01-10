@@ -171,6 +171,25 @@ class Client
         return true;
     }
 
+
+
+    /**
+     * Delete multiple objects with specified ids
+     *
+     * @param $object
+     * @param $id
+     * @return bool
+     * @throws \Exception
+     */
+    public function bulkDeleteRecords(array $ids)
+    {
+        $url = $this->baseUrl . '/services/data/v20.0/composite/sobjects?ids=' . \implode($ids, ',');
+
+        $this->makeRequest('delete', $url, ['headers' => ['Authorization' => $this->getAuthHeader()]]);
+
+        return true;
+    }
+
     /**
      * Login with user and password
      *

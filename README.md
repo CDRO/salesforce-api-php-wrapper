@@ -42,6 +42,21 @@ if ( ! isset($_GET['code'])) {
 
 ```
 
+__Creating an oauth token using a password:__
+If you work on a webserice that does not interact with any user, you'll need to create a salesforce user with the necessary rights to complete the task you'll try to achieve.
+
+```php
+$sfClient = Crunch\Salesforce\Client::create('https://test.salesforce.com/', 'clientid', 'clientsecret');
+
+$token = $sfClient->login('username', 'password+secret');
+$tokenGenerator = new AccessTokenGenerator;
+$accessToken = $tokenGenerator->createFromSalesforceResponse($token);
+
+$sfClient->setAccessToken($accessToken);
+
+```
+
+You receive the secret when creating your account. If you need a new secret, you can reset your secret token at any time.
 
 __Performing an action:__
 Once you have an access token you can perform requests against the API.
@@ -180,7 +195,7 @@ $accessToken = $tokenStore->fetchAccessToken();
 
 if ($accessToken->needsRefresh()) {
 
-	$accessToken = $sfClient->refreshToken();
+    $accessToken = $sfClient->refreshToken();
 
     $tokenStore->saveAccessToken($accessToken);
 }
@@ -234,6 +249,19 @@ Records can be deleted based on their id and type.
 
 ```php
 $sfClient->deleteRecord('Lead', '00WL0000008wVl1MDE');
+
+```
+
+### Bulk deleting records
+Records can also be deleted by giving simply their ids.
+
+```php
+$ids = [
+    '00WL0000008wVl1MDE',
+    '00WL0000008wVl1MDF',
+];
+
+$sfClient->bulkDeleteRecords($ids);
 
 ```
 

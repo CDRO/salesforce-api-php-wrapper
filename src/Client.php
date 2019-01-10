@@ -36,6 +36,10 @@ class Client
      */
     private $guzzleClient;
 
+    /**
+     * @const Salesforce API version
+     */
+    const SALESFORCE_API_VERSION = 'v43.0';
 
     /**
      * Create a sf client using a client config object or an array of params
@@ -76,7 +80,7 @@ class Client
      */
     public function getRecord($objectType, $sfId, array $fields)
     {
-        $url      = $this->baseUrl . '/services/data/v20.0/sobjects/' . $objectType . '/' . $sfId . '?fields=' . implode(',', $fields);
+        $url      = $this->baseUrl . '/services/data/' . self::SALESFORCE_API_VERSION . '/sobjects/' . $objectType . '/' . $sfId . '?fields=' . implode(',', $fields);
         $response = $this->makeRequest('get', $url, ['headers' => ['Authorization' => $this->getAuthHeader()]]);
 
         return json_decode($response->getBody(), true);
@@ -123,7 +127,7 @@ class Client
      */
     public function updateRecord($object, $id, array $data)
     {
-        $url = $this->baseUrl . '/services/data/v20.0/sobjects/' . $object . '/' . $id;
+        $url = $this->baseUrl . '/services/data/' . self::SALESFORCE_API_VERSION . '/sobjects/' . $object . '/' . $id;
 
         $this->makeRequest('patch', $url, [
             'headers' => ['Content-Type' => 'application/json', 'Authorization' => $this->getAuthHeader()],
@@ -143,7 +147,7 @@ class Client
      */
     public function createRecord($object, $data)
     {
-        $url = $this->baseUrl . '/services/data/v20.0/sobjects/' . $object . '/';
+        $url = $this->baseUrl . '/services/data/' . self::SALESFORCE_API_VERSION . '/sobjects/' . $object . '/';
 
         $response     = $this->makeRequest('post', $url, [
             'headers' => ['Content-Type' => 'application/json', 'Authorization' => $this->getAuthHeader()],
@@ -164,7 +168,7 @@ class Client
      */
     public function deleteRecord($object, $id)
     {
-        $url = $this->baseUrl . '/services/data/v20.0/sobjects/' . $object . '/' . $id;
+        $url = $this->baseUrl . '/services/data/' . self::SALESFORCE_API_VERSION . '/sobjects/' . $object . '/' . $id;
 
         $this->makeRequest('delete', $url, ['headers' => ['Authorization' => $this->getAuthHeader()]]);
 
@@ -183,7 +187,7 @@ class Client
      */
     public function bulkDeleteRecords(array $ids)
     {
-        $url = $this->baseUrl . '/services/data/v20.0/composite/sobjects?ids=' . \implode($ids, ',');
+        $url = $this->baseUrl . '/services/data/' . self::SALESFORCE_API_VERSION . '/composite/sobjects?ids=' . \implode(',', $ids);
 
         $this->makeRequest('delete', $url, ['headers' => ['Authorization' => $this->getAuthHeader()]]);
 

@@ -132,6 +132,33 @@ class ClientTest extends TestCase {
         $this->assertTrue($data);
     }
 
+
+    /** @test */
+    public function client_can_delete_record()
+    {
+        $recordIds = [];
+
+        for($i = 1; $i < 10; $i++) {
+            $redorcIds[] = 'abc' . rand(1000, 9999999);
+        }
+
+        $response = m::mock('Psr\Http\Message\ResponseInterface');
+
+
+        $guzzle = m::mock('\GuzzleHttp\Client');
+        //Make sure the url contains the passed in data
+        $guzzle->shouldReceive('delete')->with(stringContainsInOrder('Test', $recordId), \Mockery::type('array'))->once()->andReturn($response);
+
+
+        $sfClient = new \Crunch\Salesforce\Client($this->getClientConfigMock(), $guzzle);
+        $sfClient->setAccessToken($this->getAccessTokenMock());
+
+
+        $data = $sfClient->bulkDeleteRecords($recordIds);
+
+        $this->assertTrue($data);
+    }
+
     /** @test */
     public function client_can_complete_auth_process()
     {
